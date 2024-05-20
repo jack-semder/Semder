@@ -1,0 +1,19 @@
+{
+  "name": "semder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts":{
+    "devstart": "nodemon script.js"
+  },
+  "keywords": [],
+  "author": "Jack Semder",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
