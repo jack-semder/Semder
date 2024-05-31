@@ -31,13 +31,52 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
+    res.sendFile(__dirname + '/views/html/index.html');
 });
+
+app.get('/home', (req, res) => {
+    res.sendFile(__dirname + '/views/html/homepage.html')
+})
+
+app.get('/createUser', (req, res) => {
+    res.sendFile(__dirname + 'views/html/createUser.html')
+})
+
 
 app.post('/login', (req, res) => {
     console.log("TEST", req.body);
+    const { first, password } = req.body;
+    console.log(first)
+    console.log(password)
+
+    db.get('SELECT * FROM users WHERE username = ? and password = ?', [first, password], (err, row) => {
+       if (err) {
+        console.error('Error querying database', err);
+        res.status(500).send('Internal Server Error');
+       } 
+       else if (row) {
+        res.redirect('/home');
+       }
+       else {
+        res.status(401).send('Invalid username or password');
+       }
+    })
 });
 
+app.post('/createUser', (req, res) => {
+    const { username, password } = req.body;
+
+    db.run('INSERT INTO users (username, password) VALUES (?, ?)', [username, password], function(err){
+        if (err) {
+            console.error('Error creating user:', err);
+            res.status(500).send('Internal Server Error');
+        }
+        else {
+            console.log(`User ${username} created with ID ${this.lastID}`);
+            res.status(201).send(`User created successfully`);
+        }
+    })
+})
 
 
 
