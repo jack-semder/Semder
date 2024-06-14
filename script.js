@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.static('views'));
 
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    res.sendFile(__dirname + '/views/html/initial.html')
 });
 
 app.get('/login', (req, res) => {
@@ -35,11 +35,11 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    res.sendFile(__dirname + '/views/html/homepage.html')
+    res.sendFile(__dirname + '/views/html/home.html')
 })
 
 app.get('/createUser', (req, res) => {
-    res.sendFile(__dirname + 'views/html/createUser.html')
+    res.sendFile(__dirname + '/views/html/createUser.html')
 })
 
 
@@ -64,16 +64,16 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/createUser', (req, res) => {
-    const { username, password } = req.body;
+    const { first, password } = req.body;
 
-    db.run('INSERT INTO users (username, password) VALUES (?, ?)', [username, password], function(err){
+    db.run('INSERT INTO users (username, password) VALUES (?, ?)', [first, password], function(err){
         if (err) {
             console.error('Error creating user:', err);
             res.status(500).send('Internal Server Error');
         }
         else {
-            console.log(`User ${username} created with ID ${this.lastID}`);
-            res.status(201).send(`User created successfully`);
+
+            res.redirect('/home')
         }
     })
 })
